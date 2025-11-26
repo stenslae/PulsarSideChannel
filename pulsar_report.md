@@ -7,10 +7,12 @@
 ### Project Goals
 
 - **Pulsar signals** are periodic electromagnetic pulses from rotating neutron stars. This behavior reveals patterns in high noise environments, and can be an effective model in understanding side-channel techniques.
-- The primary [objectives](#project-results) of this project are as follows:
-  1. What techniques can detect data leakage in signals?
+- The primary [objectives](#takeaways) of this project are as follows:
+	1. What techniques can detect data leakage in signals?
 	2. How does scrambling level and the SNR affect pulsar data leakage?
 	3. Can an attacker determine the seed used to obfuscate the signal?
+
+---
 
 ## Project Overview
 
@@ -20,11 +22,15 @@
 
 #### Results
 
+---
+
 ### Autocorrelation Leakage
 
 #### Method
 
 #### Results
+
+---
 
 ### Spectral Fingerprinting
 
@@ -32,11 +38,15 @@
 
 #### Results
 
+---
+
 ### Envelope Detection
 
 #### Results
 
 ### Noise and SNR Effects
+
+---
 
 ### Seed Recovery / Brute-Force Attack
 
@@ -51,6 +61,16 @@
 
 #### Results
 
+---
+
 ## Takeaways
 
+### What techniques can detect data leakage in signals?
 
+
+### How does scrambling level and the SNR affect pulsar data leakage?
+
+
+### Can an attacker determine the seed used to obfuscate the signal?
+
+### Further Insights
