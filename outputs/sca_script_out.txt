@@ -1,0 +1,183 @@
+
+============================================================
+                   ATTACK RESULTS SUMMARY
+============================================================
+
+------------------------------------------------------------
+                SCRAMBLED LEAKAGE SUMMARY
+------------------------------------------------------------
+
+LEAKAGE PER SCRAMBLING:
+
+  --- Weak   Scramble ---
+    FFT Ratio:       raw 21.0289 → scr 6.2954
+    Autocorr Ratio:  raw 57.6587 → scr 1044.9951
+    PSD Ratio:       raw 27.9163 → scr 8.1537
+    Peak Frequency:  raw 27.4445 → scr 87.7325
+    Peak Time:       raw -0.2297 → scr -0.1298
+
+  --- Medium Scramble ---
+    FFT Ratio:       raw 21.0289 → scr 6.3824
+    Autocorr Ratio:  raw 57.6587 → scr 1109.3901
+    PSD Ratio:       raw 27.9163 → scr 8.4563
+    Peak Frequency:  raw 27.4445 → scr 87.7325
+    Peak Time:       raw -0.2297 → scr -0.1298
+
+  --- Strong Scramble ---
+    FFT Ratio:       raw 21.0289 → scr 6.3824
+    Autocorr Ratio:  raw 57.6587 → scr 1109.3901
+    PSD Ratio:       raw 27.9163 → scr 8.4563
+    Peak Frequency:  raw 27.4445 → scr 87.7325
+    Peak Time:       raw -0.2297 → scr -0.1298
+
+LEAKAGE PER SNR:
+
+  --- Clean  Scramble ---
+    FFT ratio:       raw 65.5754 → scr 11.5670
+    Autocorr ratio:  raw 124.4321 → scr 4243.4494
+    PSD ratio:       raw 94.9915 → scr 23.0015
+    Peak Frequency:  raw 9.9980 → scr 2.3995
+    Peak Time:       raw -0.0010 → scr -0.0010
+
+  --- Small Noise Scramble ---
+    FFT ratio:       raw 11.6789 → scr 6.5392
+    Autocorr ratio:  raw 89.6477 → scr 90.5435
+    PSD ratio:       raw 13.8907 → scr 7.6681
+    Peak Frequency:  raw 8.5983 → scr 15.1970
+    Peak Time:       raw -0.0010 → scr -0.0010
+
+  --- Medium Noise Scramble ---
+    FFT ratio:       raw 3.1430 → scr 3.6158
+    Autocorr ratio:  raw 9.1464 → scr 8.8272
+    PSD ratio:       raw 1.4567 → scr 1.5132
+    Peak Frequency:  raw 29.9940 → scr 284.3431
+    Peak Time:       raw -0.7030 → scr -0.0030
+
+  --- Large Noise Scramble ---
+    FFT ratio:       raw 3.7184 → scr 3.6917
+    Autocorr ratio:  raw 7.4088 → scr 8.8803
+    PSD ratio:       raw 1.3264 → scr 1.2391
+    Peak Frequency:  raw 61.1878 → scr 48.9902
+    Peak Time:       raw -0.2140 → scr -0.5140
+
+------------------------------------------------------------
+                ENVELOPE LEAKAGE SUMMARY
+------------------------------------------------------------
+
+LEAKAGE PER SCRAMBLING:
+
+  --- Weak   Scramble ---
+    FFT ratio:       raw 21.0289 → scr 35.7219
+    Autocorr ratio:  raw 57.6587 → scr 60.1267
+    PSD ratio:       raw 27.9163 → scr 51.0598
+    Peak Frequency:  raw 27.4445 → scr 13.1974
+    Peak Time:       raw -0.2297 → scr -0.0010
+
+  --- Medium Scramble ---
+    FFT ratio:       raw 21.0289 → scr 36.4163
+    Autocorr ratio:  raw 57.6587 → scr 59.7550
+    PSD ratio:       raw 27.9163 → scr 51.6677
+    Peak Frequency:  raw 27.4445 → scr 2.8494
+    Peak Time:       raw -0.2297 → scr -0.0010
+
+  --- Strong Scramble ---
+    FFT ratio:       raw 21.0289 → scr 36.4163
+    Autocorr ratio:  raw 57.6587 → scr 59.7550
+    PSD ratio:       raw 27.9163 → scr 51.6677
+    Peak Frequency:  raw 27.4445 → scr 2.8494
+    Peak Time:       raw -0.2297 → scr -0.0010
+
+LEAKAGE PER SNR:
+
+  --- Clean  Scramble ---
+    FFT ratio:       raw 65.5754 → scr 104.9585
+    Autocorr ratio:  raw 124.4321 → scr 38.6938
+    PSD ratio:       raw 94.9915 → scr 152.0865
+    Peak Frequency:  raw 9.9980 → scr 1.3997
+    Peak Time:       raw -0.0010 → scr -0.0010
+
+  --- Small Noise Scramble ---
+    FFT ratio:       raw 11.6789 → scr 29.0597
+    Autocorr ratio:  raw 89.6477 → scr 75.4846
+    PSD ratio:       raw 13.8907 → scr 48.2311
+    Peak Frequency:  raw 8.5983 → scr 1.3997
+    Peak Time:       raw -0.0010 → scr -0.0010
+
+  --- Medium Noise Scramble ---
+    FFT ratio:       raw 3.1430 → scr 5.9951
+    Autocorr ratio:  raw 9.1464 → scr 63.1983
+    PSD ratio:       raw 1.4567 → scr 3.1022
+    Peak Frequency:  raw 29.9940 → scr 1.3997
+    Peak Time:       raw -0.7030 → scr -0.0010
+
+  --- Large Noise Scramble ---
+    FFT ratio:       raw 3.7184 → scr 4.7259
+    Autocorr ratio:  raw 7.4088 → scr 62.1391
+    PSD ratio:       raw 1.3264 → scr 2.4405
+    Peak Frequency:  raw 61.1878 → scr 20.9958
+    Peak Time:       raw -0.2140 → scr -0.0010
+
+------------------------------------------------------------
+                ENVELOPE ADVANTAGE
+------------------------------------------------------------
+
+ENVELOPE ADVANTAGE PER SCRAMBLING:
+
+  --- Weak   Scramble ---
+    FFT Env advantage:       Δ = 29.4265
+    Autocorr Env advantage:  Δ = -984.8684
+    PSD Env advantage:       Δ = 42.9061
+
+  --- Medium Scramble ---
+    FFT Env advantage:       Δ = 30.0338
+    Autocorr Env advantage:  Δ = -1049.6350
+    PSD Env advantage:       Δ = 43.2114
+
+  --- Strong Scramble ---
+    FFT Env advantage:       Δ = 30.0338
+    Autocorr Env advantage:  Δ = -1049.6350
+    PSD Env advantage:       Δ = 43.2114
+
+ENVELOPE ADVANTAGE PER SNR:
+
+  --- Clean  Scramble ---
+    FFT Env advantage:       Δ = 93.3915
+    Autocorr Env advantage:  Δ = -4204.7556
+    PSD Env advantage:       Δ = 129.0851
+
+  --- Small Noise Scramble ---
+    FFT Env advantage:       Δ = 22.5205
+    Autocorr Env advantage:  Δ = -15.0589
+    PSD Env advantage:       Δ = 40.5631
+
+  --- Medium Noise Scramble ---
+    FFT Env advantage:       Δ = 2.3793
+    Autocorr Env advantage:  Δ = 54.3711
+    PSD Env advantage:       Δ = 1.5891
+
+  --- Large Noise Scramble ---
+    FFT Env advantage:       Δ = 1.0342
+    Autocorr Env advantage:  Δ = 53.2587
+    PSD Env advantage:       Δ = 1.2014
+
+------------------------------------------------------------
+                   SEED RECOVERY SUMMARY
+------------------------------------------------------------
+Total sets brute forced:     12
+Range of Seeds Guessed:      1000
+Successful recoveries:       6 (50.00%)
+Average brute-force time:    60.4787 sec
+
+Seed Recovery Success Rate per Scramble Level:
+  Weak   : 50.00%
+  Medium : 50.00%
+  Strong : 50.00%
+Seed Recovery Success Rate per Noise Level:
+  Clean  : 100.00%
+  Small Noise : 100.00%
+  Medium Noise : 0.00%
+  Large Noise : 0.00%
+
+============================================================
+                     END OF SUMMARY
+============================================================
