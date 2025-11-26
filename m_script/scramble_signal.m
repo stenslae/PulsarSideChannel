@@ -22,9 +22,6 @@ function y = scramble_signal(x, fs, seed, strength)
 
     jitter = randi([-max_jitter, max_jitter], 1, numChunks);
 
-    FFT_SIZE = 2^nextpow2(round(0.01 * fs));
-    phase = 2*pi*rand(1,FFT_SIZE);
-
     y = x;
 
     % Scramble each chunk
@@ -47,16 +44,6 @@ function y = scramble_signal(x, fs, seed, strength)
         % 3. Jitter
         if any(strcmp(strength, {'Strong', 'Strongest'}))
             segment = circshift(segment, jitter(k));
-        end
-
-        % 4. Phase Scramble
-        if any(strcmp(strength, {'Strongest'}))
-              S = fft(segment, FFT_SIZE);
-
-              % Phase Scramble
-              angle_scramble = exp(1i * phase);
-              scrambled = abs(S) .* angle_scramble;
-              segment = real(ifft(scrambled, FFT_SIZE));
         end
 
         % Add segment to scrambled signal

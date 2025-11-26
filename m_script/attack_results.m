@@ -16,7 +16,7 @@ function attack_results(results, noisy_sets, t)
 
     % Dimensions
 
-    LEVELS  = {'Weak','Medium','Strong','Strongest'};
+    LEVELS  = {'Weak','Medium','Strong'};
     SNRs = noisy_sets(:,1);
 
     num_snr = length(SNRs);
@@ -48,6 +48,9 @@ function attack_results(results, noisy_sets, t)
     fft_adv  = nan(num_snr,num_levels);
     ac_adv   = nan(num_snr,num_levels);
     psd_adv  = nan(num_snr,num_levels);
+
+    top5_hits  = false(num_snr,num_levels);
+    seed_err  = nan(num_snr,num_levels);
 
     % Seed success tracking
     seed_success  = nan(num_snr, num_levels);
@@ -89,7 +92,13 @@ function attack_results(results, noisy_sets, t)
         ac_adv(snr_idx, lvl_idx)   = ac_env(snr_idx, lvl_idx) - ac_scr(snr_idx, lvl_idx);
         psd_adv(snr_idx, lvl_idx)  = psd_env(snr_idx, lvl_idx) - psd_scr(snr_idx, lvl_idx);
 
+        seed_err(snr_idx, lvl_idx) = r.seed_error;
+
         % Seed Success Metrics
+        if any(r.seed_top5 == r.seed_true)
+              top5_hits(snr_idx,lvl_idx) = true;
+        end
+
         if r.seed_guess == r.seed_true
             seed_success(snr_idx, lvl_idx) = 1;
             seed_correct = seed_correct + 1;
@@ -192,26 +201,35 @@ function attack_results(results, noisy_sets, t)
     fprintf("                   SEED RECOVERY SUMMARY\n");
     fprintf("------------------------------------------------------------\n");
 
+    MAE      = mean(mean(abs(seed_err)));
+    RMSE     = sqrt(mean(mean(seed_err.^2)));
+    top1_acc = 100 * mean(mean(seed_success));
+    top5_acc = 100 * mean(mean(top5_hits));
+
     %  ==== Seed Recovery Stats ====
 
-    fprintf("%-28s %d\n",   "Total sets brute forced:", total_sets);
-    fprintf("%-28s %d\n",   "Range of Seeds Guessed:", results(1).seed_max);
-    fprintf("%-28s %d (%.2f%%)\n", "Successful recoveries:", seed_correct, 100*seed_correct/total_sets);
-    fprintf("%-28s %.4f sec\n\n", "Average brute-force time:", seed_time);
+    fprintf("Attack Summary:\n");
+    fprintf("%-30s : %d\n",   "Total Sets Brute Forced", total_sets);
+    fprintf("%-30s : 1-%d\n", "Range of Seeds Guessed", results(1).seed_max);
+    fprintf("%-30s : %d (%.2f%%)\n", "Successful Recoveries", seed_correct, 100*seed_correct/total_sets);
+    fprintf("%-30s : %.4f sec\n\n", "Average Brute-Force Time", seed_time);
 
+    fprintf("Accuracy/Error Metrics:\n");
+    fprintf("%-35s : %.2f%%\n", "Top 1 Accuracy", top1_acc);
+    fprintf("%-35s : %.2f%%\n", "Top 5 Accuracy", top5_acc);
+    fprintf("%-35s : %.3f\n", "Mean Absolute Error (MAE)", MAE);
+    fprintf("%-35s : %.3f\n\n", "Root Mean Square Error (RMSE)", RMSE);
 
-    %  ==== Per Scramble Level ====
-
+    % ==== Per Scramble Level ====
     fprintf("Seed Recovery Success Rate per Scramble Level:\n");
     for i = 1:num_levels
-        fprintf("  %-6s : %.2f%%\n", LEVELS{i}, 100*mean(seed_success(:,i)));
+        fprintf(" %-6s : %.2f%%\n", LEVELS{i}, 100*mean(seed_success(:,i)));
     end
 
-    %  ==== Per Noise Level ====
-
+    % ==== Per Noise Level ====
     fprintf("Seed Recovery Success Rate per Noise Level:\n");
     for i = 1:num_snr
-        fprintf("  %-6s : %.2f%%\n", SNRs{i}, 100*mean(seed_success(i,:)));
+        fprintf(" %-6s : %.2f%%\n", SNRs{i}, 100*mean(seed_success(i,:)));
     end
 
     % ============================================

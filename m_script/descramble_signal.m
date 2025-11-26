@@ -21,9 +21,6 @@ function y = descramble_signal(x, fs, seed, strength)
 
     jitter = randi([-max_jitter, max_jitter], 1, numChunks);
 
-    FFT_SIZE = 2^nextpow2(round(0.01 * fs));
-    phase = 2*pi*rand(1, FFT_SIZE);
-
     y = x;
 
     % Unscramble each chunk
@@ -32,15 +29,6 @@ function y = descramble_signal(x, fs, seed, strength)
         a = (k-1)*chunk_len + 1;
         b = min(a + chunk_len - 1, N);
         segment = y(a:b);
-
-        % 1. Phase Descramble
-        if any(strcmp(strength, {'Strongest'}))
-              S = fft(segment, FFT_SIZE);
-
-              % Undo phase scramble
-              s_un = abs(S) .* exp(-1i * phase);
-              segment = real(ifft(s_un, FFT_SIZE));
-        end
 
         % 1. Reverse Jitter
         if any(strcmp(strength, {'Strong', 'Strongest'}))
