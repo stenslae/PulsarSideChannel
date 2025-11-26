@@ -1,4 +1,4 @@
-# ⚡ Side‑Channel Signal Analysis
+# ⚡ Side‑Channel Analysis
 
 A MATLAB/Octave framework for experimenting with **signal leakage**, **scrambling**, and **side‑channel attacks** on simulated pulsar‑like repeated pulse signals.
 
@@ -62,7 +62,7 @@ A brute‑force side‑channel attack attempts seed recovery by:
 
 ## 🚀 Basic Usage
 
-- Use the pre-made [driver.m](#../m_script/driver.m), or use it as below:
+- Use the pre-made [driver.m](#m_script/driver.m), or use it as below:
 
 ```matlab
 % noisy_sets: cell array {label, signal}
