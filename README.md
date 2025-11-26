@@ -1,10 +1,8 @@
 # ⚡ Side‑Channel Analysis
 
-A MATLAB/Octave framework for experimenting with **signal leakage**, **scrambling**, and **side‑channel attacks** on simulated pulsar‑like repeated pulse signals.
+A MATLAB/Octave framework for experimenting with signal leakage, scrambling, and side‑channel attacks on simulated pulsar‑like repeated pulse signals.
 
 ## 🎯 Project Purpose
-
-This repository implements a platform to:
 
 - Analyze vulnerabilities in **repeated pulse signals**
 - Evaluate **obfuscation and scrambling** techniques
@@ -19,22 +17,20 @@ This repository implements a platform to:
 | **Languages** | MATLAB / Octave |
 | **Signal Analysis Methods** | FFT, Autocorrelation, Power Spectral Density (PSD) |
 | **Obfuscation Techniques** | Bit flipping, Amplitude shifting, Timing jitter |
-| **Attack Method** | Brute‑force seed scoring via combined spectral + temporal leakage |
+| **Attack Method** | Brute‑force seed scoring via combined spectral + temporal leakage + envelope correlation |
 
 ## 📝 Framework Components
 
 ### 🔀 1. Scrambling / Obfuscation
 
 #### Overview
-The system supports **three scrambling strength levels**:
+The system scrambles signals at three strengths:
 
 | Strength | Description |
 |---|---|
 | **Weak** | Bit flip only |
 | **Medium** | Bit flip + amplitude shift |
 | **Strong** | Bit flip + amplitude shift + timing jitter |
-
-These levels mimic realistic signal obfuscation strategies.
 
 ### 📡 2. Leakage Analysis
 
@@ -47,18 +43,17 @@ Each signal variant (raw, scrambled, enveloped) is evaluated using:
 | **Autocorrelation Ratio** | Quantifies pulse repetition detectability |
 | **PSD Ratio** | Highlights structured signal content relative to noise |
 
-These scores indicate how much exploitable information remains after obfuscation.
-
 ### 🧩 3. Seed Recovery Attack
 
 #### Overview
 A brute‑force side‑channel attack attempts seed recovery by:
 
-1. Iterating over candidate seeds **(1–1000)**
-2. Testing all **scrambling strengths**
+1. Iterating over possible seeds **(1–16384)**
+2. Testing all possible **scrambling strengths**
 3. Descrambling the signal using each seed guess
-4. Scoring leakage using **combined FFT + autocorrelation ratios**
-5. Selecting the **highest‑scoring seed** as the recovered value
+5. Scoring leakage using **(combined FFT + autocorrelation ratios) * envelope correlation**
+6. Discarding bad individual scores.
+7. Selecting the **highest‑scoring seed** as the recovered seed.
 
 ## 🚀 Basic Usage
 
