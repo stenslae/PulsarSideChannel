@@ -18,15 +18,19 @@
 
 ### What is a Side-Channel Attack?
 
-- **Side-Channel Attacks** (SCA) are noninvasive attacks that target the implementation of a cryptographic algorithm instead of exploiting statistical/mathematical weaknesses. SCAs are divided into two main categories: Active Attacks and Passive Attacks.
-- **Active Attacks** include fault injections such as EM interference, laser glitching, and clock pin tampering. The goal of these attacks is to use side channel techniques to alter the behavior of a device, such as making the device skip instructions or reveal secret information.
-- **Passive Attacks** exploit physical information leaking from various channels/sources including power consumption, time taken for a computation, and electromagnetic (EM) radiation. The goal of these attacks is to use side channel techniques to expose device secrets. For example, if a device consumes more power computing a `1` compared to a `0`, monitoring power usage can easily expose information and extract the secret key of the cipher.
-- This project focuses on **passive electromagnetic side-channel attacks.** EM SCA focuses on measuring electromagnetic waves emitted from integrated circuits (ICs) during operation. EM waves are produced as current flows across a device, oftentimes where transistor and switching activities occur with changing inputs in turn will generate the most EM signals. EM emanations can be both intentional and unintentional.
-- **Intentional EM emanations** are from current flowing, with sharp rising edges. These are observable across full frequency bands. With these emanations, the EM response of the critical data path is attempted to be isolated, typically by targeting a higher frequency band with a small and senstive EM probe.
-- **Unintentional EM emanations** are produced by electric and electromagnetic coupling between components, which is a phenomenon that can generate a comprimising signal within ICs. Coupled components can generate signals that are modulated, either with amplitude and frequency, depending on the component.
-- **Simple EM Analysis** (SEMA) is when an attacker obtains a single time domain trace to directly gain knowledge about the device. SEMA can only work when an attacker has prior knowledge about the device, and an individual attempts to obtain critical information- oftentimes a sequence of transitions at startup on a device can include information about device secrets.
-- **Differential EM Analysis** (DEMA) is when an attacker exploits information that is not visually observable. Oftentimes, this involves using a self-referencing approach where an analyzed signal is compared with the signal at a different time or location on the device. This type of analysis can be done when an attacker does not know much about a device, and can expose how a signal propagates in a device and identify functional and structural details in a device. The exposed information can help reverse engineer the device or assist in providing information to disable security policies within systems.
-- **EM SCA Countermeasures** include shielding ICs and improving circuit designs to reduce the coupling so that unintentional emanations are reduced. Additionally, by having devices compute dummy bits, attackers can struggle to differentiate between critical data and dummy bits in the event of a successful EM SCA.
+- **Side-Channel Attacks (SCA) are noninvasive attacks that target the implementation of a cryptographic algorithm instead of exploiting statistical/mathematical weaknesses.**
+	- **Active Attacks** include fault injections such as EM interference, laser glitching, and clock pin tampering. The goal of these attacks is to use side channel techniques to alter the behavior of a device, such as making the device skip instructions or reveal secret information. 
+	- **Passive Attacks** observe information a device unintentionally leaks through power usage, timing, or EM signals. The goal of these attacks is to use side channel techniques to expose device secrets.
+
+- This project focuses on passive electromagnetic (EM) SCAs, which measure EM emissions from integrated circuits (ICs) during operation. EM signals are strongest where current switches rapidly, especially during transistor activity.
+	- **Intentional EM emanations** come from normal current flow and are observable across full frequency bands. Attackers try to isolate the data path using a small, sensitive EM probes at higher frequencies.
+ 	- **Unintentional EM emanations** result from electrical/EM coupling between components, which generates modulated signals that may reveal internal behavior.
+
+- There are multiple techniques/strategies used by attackers to determine secrets in EM signals.
+	- **Simple EM Analysis** (SEMA) uses one time-domain trace to directly gain knowledge about the device. SEMA can only work when an attacker has prior knowledge about the device. Oftentimes, startup patterns on a device include information about device secret keys.
+	- **Differential EM Analysis** (DEMA) extracts non-visible information from the device, which is especially useful for unknown devices. This involves using a self-referencing approach where an analyzed signal is compared with the signal at a different time or location on the device. DEMA exposes how signals propagate and the internal strcutural details of a device, which can assist in reverse engineering devices.
+
+- **EM SCA Countermeasures** include  IC shielding, reducing circuit coupling, and adding noise such as dummy computations to hide real data.
 
 ### Project Goals
 
