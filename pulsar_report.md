@@ -3,8 +3,8 @@
 ## Table of Contents
 
 1. [Introduction](#introduction)
-   - [What is a SCA?](#what-is-a-side-channel-attack)
    - [Project Goals](#project-goals)
+   - [What is a SCA?](#what-is-a-side-channel-attack)
 2. [Project Overview](#project-overview)
    - [Autocorrelation Leakage](#autocorrelation-leakage)
    - [Spectral Fingerprinting](#spectral-fingerprinting)
@@ -18,6 +18,14 @@
 4. [References](#references)
 
 ## Introduction
+
+### Project Goals
+
+- **Pulsar signals** are periodic electromagnetic pulses from rotating neutron stars. This behavior displays patterns in high noise environments, and can be an effective model in understanding simple EM side-channel techniques.
+- The primary [objectives](#takeaways) of this project are as follows:
+	1. What techniques can detect data leakage in signals?
+	2. How does scrambling level and the SNR affect pulsar data leakage?
+	3. Can an attacker determine the seed used to obfuscate the signal?
 
 ### What is a Side-Channel Attack?
 
@@ -33,15 +41,7 @@
 	- **Simple EM Analysis** (SEMA) uses one time-domain trace to directly gain knowledge about the device. SEMA can only work when an attacker has prior knowledge about the device. Oftentimes, startup patterns on a device include information about device secret keys.
 	- **Differential EM Analysis** (DEMA) extracts non-visible information from the device, which is especially useful for unknown devices. This involves using a self-referencing approach where an analyzed signal is compared with the signal at a different time or location on the device. DEMA exposes how signals propagate and the internal strcutural details of a device, which can assist in reverse engineering devices.
 
-- **EM SCA Countermeasures** include  IC shielding, reducing circuit coupling, and adding noise such as dummy computations to hide real data.
-
-### Project Goals
-
-- **Pulsar signals** are periodic electromagnetic pulses from rotating neutron stars. This behavior displays patterns in high noise environments, and can be an effective model in understanding simple EM side-channel techniques.
-- The primary [objectives](#takeaways) of this project are as follows:
-	1. What techniques can detect data leakage in signals?
-	2. How does scrambling level and the SNR affect pulsar data leakage?
-	3. Can an attacker determine the seed used to obfuscate the signal?
+- **EM SCA Countermeasures** include IC shielding, reducing circuit coupling, and adding noise such as dummy computations to hide real data.
 
 ---
 
@@ -53,6 +53,33 @@
 
 #### Results
 
+```bash
+LEAKAGE PER SCRAMBLING:
+
+  --- Weak   Scramble ---
+    Autocorr ratio:  raw 57.6587 → scr 60.1267
+
+  --- Medium Scramble ---
+    Autocorr ratio:  raw 57.6587 → scr 59.7550
+
+  --- Strong Scramble ---
+    Autocorr ratio:  raw 57.6587 → scr 59.7550
+
+LEAKAGE PER SNR:
+
+  --- Clean  Scramble ---
+    Autocorr ratio:  raw 124.4321 → scr 38.6938
+
+  --- Small Noise Scramble ---
+    Autocorr ratio:  raw 89.6477 → scr 75.4846
+
+  --- Medium Noise Scramble ---
+    Autocorr ratio:  raw 9.1464 → scr 63.1983
+
+  --- Large Noise Scramble ---
+    Autocorr ratio:  raw 7.4088 → scr 62.1391
+```
+
 ---
 
 ### Spectral Fingerprinting
@@ -61,6 +88,42 @@
 
 #### Results
 
+![Leakage Heatmap](outputs/leakage_heatmap.jpg)
+
+```bash
+LEAKAGE PER SCRAMBLING:
+
+  --- Weak   Scramble ---
+    FFT ratio:       raw 21.0289 → scr 35.7219
+    PSD ratio:       raw 27.9163 → scr 51.0598
+
+  --- Medium Scramble ---
+    FFT ratio:       raw 21.0289 → scr 36.4163
+    PSD ratio:       raw 27.9163 → scr 51.6677
+
+  --- Strong Scramble ---
+    FFT ratio:       raw 21.0289 → scr 36.4163
+    PSD ratio:       raw 27.9163 → scr 51.6677
+
+LEAKAGE PER SNR:
+
+  --- Clean  Scramble ---
+    FFT ratio:       raw 65.5754 → scr 104.9585
+    PSD ratio:       raw 94.9915 → scr 152.0865
+
+  --- Small Noise Scramble ---
+    FFT ratio:       raw 11.6789 → scr 29.0597
+    PSD ratio:       raw 13.8907 → scr 48.2311
+
+  --- Medium Noise Scramble ---
+    FFT ratio:       raw 3.1430 → scr 5.9951
+    PSD ratio:       raw 1.4567 → scr 3.1022
+
+  --- Large Noise Scramble ---
+    FFT ratio:       raw 3.7184 → scr 4.7259
+    PSD ratio:       raw 1.3264 → scr 2.4405
+```
+
 ---
 
 ### Envelope Detection
@@ -68,16 +131,20 @@
 #### Method
 
 - **Enveloping** is a process that smooths signals and outlines its extremes.
-- The **Hilbert transform** was used to 
+- The **Hilbert transform** phase shifts a signal by 90 degrees. When the raw signal is added to the Hilbert transform, this creates the **analytic signal.** The analytic signal quantifies how much the signal rotates over time.
+- The amplitude of the analytic signal was used as the envelope, capturing instantaneous amplitude independent from phase.
+- This method does not remove noise, but it reduces visible oscilations in the envelope because phase cancels out when calculating magnitude.
+- Because peak amplitudes are preserved while phase variations are ignored, periodic energy leakage becomes easier to detect in spectral analysis.
 
 #### Results
 
-- It was found that enveloping the signal resulted in improved spectral results. The advantage of enveloping the signal was consistent across all scrambling levels, while noise reduced the advantage. But, in high noise environments, spectral analysis was reduced across the board.
+- **Applying envelope detection increased spectral leakage detectability** compared to scrambled signals, particularly in low-noise environments.
 
-- Autocorrelation was shown to be significiantly less effective for the leakage.
+- The advantage of enveloping the signal was consistent across all scrambling levels, while noise reduced the advantage. But, in high noise environments, spectral analysis effectiveness dropped substantially regardless of envelope processing.
+
+- Autocorrelation was shown to be significiantly less effective as a leakage indicator. This could be due to autocorrelation being less effective in pulsar detection, as pulsars are too sparse for autocorrelation to detect a correlation.
 
 ![Envelope Heatmap](outputs/envelope_advantage.jpg)
-
 
 ```bash
 LEAKAGE PER SCRAMBLING:
@@ -141,7 +208,7 @@ LEAKAGE PER SNR:
     PSD Env advantage:       Δ = 1.2014
 ```
 
-- Additionally, from a visual comparison, the pulsar peaks became very prominent even in high noise and high scrambling situations:
+- Additionally, direct waveform inspection showed that the enveloped obfuscated signal still had distinguishable pulsar peaks across all tested SNR and scrambling conditions:
   
 ![All Signal Levels](outputs/signals.jpg)
 
@@ -152,36 +219,40 @@ LEAKAGE PER SNR:
 #### Method
 
 1. **Seeded RNGs:**
-   - A seeded Mersenne Twister PRNG was used.
-   - Mersenne Twisters generate a state array based on an input seed, then the state array determines the number being outputted. Each successive integer comes from the previous number, and they all originate from the original state array built from the input seed. Therefore, when calling a Twister PRNG again with the same seed, each successive number from the PRNG stream will be equal.
-   - In MATLAB/Octave when rng(seed) is called, the global stream is set, and the resulting random numbers are determined based on the call number.
-   - Recalling rng(seed) can reset the global stream and generate repeated numbers, if the random functions are called in the same order.
+   - The implementation uses a **seeded Mersenne Twister PRNG.**
+   - Mersenne Twister generators build an internal state array initialized from an input seed. Each successive values in the PRNG stream are deterministically derived from this state. As a result, **re-initializing the generator with the same seed reproduces the same sequence,** provided that random draw functions are called in the same order.
+   - In MATLAB/Octave, calling `rng(seed)` sets the **global random stream,** making random values dependent on both the seed and the number of times the stream has been sampled.
+   - Calling `rng(seed)` again in the program resets the global stream, which can lead to identical random values being generated if subsequent random function calls occur in the same sequence.
    
 2. **Chunking the Signal:**
    - The signal was separated into individual chunks for scrambling.
      
 3. **Scrambling Level 1: Flipping**
-   - The chunk had a chance of being randomly flipped
+   - Each chunk was assigned a random probability of being flipped (reversed in time).
    
 4. **Scrambling Level 2: Amplitude Shifting**
-   - The chunk was scaled with a random value.
+   - Chunks were multiplied by a randomly generated scale factor.
    
 5. **Scrambling Level 3: Time Jitter**
-   - The chunk was circshifted by a random time.
+   - A circular time offset (circshift) was applied to each chunk using a random shift value.
      
 6. **Descrambling:**
-   - The reverse operations were looped through each chunk in the following order:
-     	- 1. Reverse Time Jitter
-     	- 2. Reverse Amplitude shifting
-     	- 3. Reverse Bit Flipping
-   - The correlation coefficient of the descrambled vs raw signal was equal to 1, verifying descrambling worked.
+   - Chunks were reconstructed by applying the inverse operations in reverse order:
+     	- 1. Undo Time Jitter
+     	- 2. Undo Amplitude shifting
+     	- 3. Undo Flipping
+   - The correlation coefficient between the descrambled signal and the raw input signal was 1.0, confirming lossless reversal of scrambling.
 
 #### Results
 
-- Scrambling Levels Compared with Raw and Enveloped Signals:
+- Scrambled signal variants were compared against both raw and enveloped signals:
 ![Signal Comparisons](outputs/signal_compare2.jpg)
 
-- The scrambling was revealed to be relatively weak, especially in this application. Pulsars are very periodic, which is easy to expose visually and with spectral analysis. In the time domain, especially high-noise environments, though, scrambling was effective in hiding the original signal structure. Scrambling did reduce the effectiveness of spectral analysis.
+- The scrambling approach was found to be moderately effective, but relatively weak for highly periodic signals such as pulsars, whose regular structure can still be revealed through visual inspection and spectral analysis.
+
+- In the time domain, particularly under high-noise conditions, scrambling more successfully obscured the original signal's structure.
+
+- Although scrambling did not fully mask periodicity, it reduced spectral detection strength and partially degraded frequency-domain analysis, indicating that the method could still serve as a lightweight obfuscation layer in noisy environments.
 
 ---
 
@@ -192,7 +263,7 @@ LEAKAGE PER SNR:
 - An attack was simulated where an attacker attempts to recover the scrambling seed using **brute force.**
 - **The following assumptions were made:**
   - The attacker has full access to the obfuscated signal.
-  - The attacker knows the scrambling/bfuscation methods being used.
+  - The attacker knows the scrambling/obfuscation methods being used.
 
 #### Method
 
@@ -226,10 +297,10 @@ LEAKAGE PER SNR:
 
 #### Results
 
-Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced with the correct seed being the first or second choice while sets started to gain less reliable results at 2^16.
+Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced with the correct seed being the first or second choice while sets started to gain less reliable results due to collissions at 2^16 seeds.
 
 An interesting note is that before implementing noise thresholding, Top‑1 & Top‑5 accuracy hovered around 50–75%, especially failing under high noise. After thresholding, Top‑5 accuracy reached 100%, showing that **thresholding corrected mis‑weighted spectral scores inflated by noise.**
-8192
+
 Additionally, the speed of the brute force mechanism is slow. Some potential improvements would be improving speed by using MATLAB instead of Octave, as a lot of the brute force tasks could be parallelized, and MATLAB's parallelization performance is better. Using `parfor` for the brute force loops would greatly reduce runtime. 
 
 ##### Test 1 Results: 2048 Possible Seeds on the Same Signal of Varying Noise
