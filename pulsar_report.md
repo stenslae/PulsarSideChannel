@@ -297,7 +297,7 @@ LEAKAGE PER SNR:
 
 #### Results
 
-Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced with the correct seed being the first or second choice while sets started to gain less reliable results due to collissions at 2^16 seeds.
+Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced with the correct seed being the first or second choice while sets started to gain less reliable results due to collisions at 2^16 seeds.
 
 An interesting note is that before implementing noise thresholding, Top‑1 & Top‑5 accuracy hovered around 50–75%, especially failing under high noise. After thresholding, Top‑5 accuracy reached 100%, showing that **thresholding corrected mis‑weighted spectral scores inflated by noise.**
 
@@ -381,13 +381,51 @@ Seed Recovery Success Rate per Noise Level:
 ##### Test 4 Results: 32,768 Possible Seeds on the Same Signal of Varying Noise
 
 ```bash
+Attack Summary:
+Total Sets Brute Forced        : 15
+Range of Seeds Guessed         : 1-32768
+Successful Recoveries          : 15 (100.00%)
+Average Brute-Force Time       : 2048.3212 sec
 
+Accuracy/Error Metrics:
+Top 1 Accuracy                 : 100.00%
+Top 5 Accuracy                 : 100.00%
+
+Seed Recovery Success Rate per Scramble Level:
+ Weak   : 100.00%
+ Medium : 100.00%
+ Strong : 100.00%
+Seed Recovery Success Rate per Noise Level:
+ Clean  : 100.00%
+ Low Noise : 100.00%
+ Small Noise : 100.00%
+ Medium Noise : 100.00%
+ High Noise : 100.00%
 ```
 
 ##### Test 5 Results: 65,536 Possible Seeds on the Same Signal of Varying Noise
 
 ```bash
+Attack Summary:
+Total Sets Brute Forced        : 15
+Range of Seeds Guessed         : 1-65536
+Successful Recoveries          : 0 (0.00%)
+Average Brute-Force Time       : 4053.6489 sec
 
+Accuracy/Error Metrics:
+Top 1 Accuracy                 : 0.00%
+Top 5 Accuracy                 : 0.00%
+
+Seed Recovery Success Rate per Scramble Level:
+ Weak   : 0.00%
+ Medium : 0.00%
+ Strong : 0.00%
+Seed Recovery Success Rate per Noise Level:
+ Clean  : 0.00%
+ Low Noise : 0.00%
+ Small Noise : 0.00%
+ Medium Noise : 0.00%
+ High Noise : 0.00%
 ```
 
 ##### Test 6 Results: 4096 Possible Seeds on the Varying Pulsar Signals with Low Noise
