@@ -6,10 +6,10 @@
    - [What is a SCA?](#what-is-a-side-channel-attack)
    - [Project Goals](#project-goals)
 2. [Project Overview](#project-overview)
-   - [Signal Scrambling and Descrambling Methods](#signal-scrambling-and-descrambling-methods)
    - [Autocorrelation Leakage](#autocorrelation-leakage)
    - [Spectral Fingerprinting](#spectral-fingerprinting)
    - [Envelope Detection](#envelope-detection)
+   - [Signal Scrambling and Descrambling](#signal-scrambling-and-descrambling)
    - [Seed Recovery/Brute-Force Attack](#seed-recovery)
 3. [Takeaways](#takeaways)
    - [What techniques can detect data leakage in signals?](#what-techniques-can-detect-data-leakage-in-signals)
@@ -47,14 +47,6 @@
 
 ## Project Overview
 
-### Signal Scrambling and Descrambling Methods
-
-#### Method
-
-#### Results
-
----
-
 ### Autocorrelation Leakage
 
 #### Method
@@ -73,9 +65,123 @@
 
 ### Envelope Detection
 
+#### Method
+
+- **Enveloping** is a process that smooths signals and outlines its extremes.
+- The **Hilbert transform** was used to 
+
 #### Results
 
-### Noise and SNR Effects
+- It was found that enveloping the signal resulted in improved spectral results. The advantage of enveloping the signal was consistent across all scrambling levels, while noise reduced the advantage. But, in high noise environments, spectral analysis was reduced across the board.
+
+- Autocorrelation was shown to be significiantly less effective for the leakage.
+
+![Envelope Heatmap](outputs/envelope_advantage.jpg)
+
+
+```bash
+LEAKAGE PER SCRAMBLING:
+
+  --- Weak   Scramble ---
+    FFT ratio:       raw 21.0289 → env 35.7219
+    Autocorr ratio:  raw 57.6587 → env 60.1267
+    PSD ratio:       raw 27.9163 → env 51.0598
+    FFT Env advantage:       Δ = 29.4265
+    Autocorr Env advantage:  Δ = -984.8684
+    PSD Env advantage:       Δ = 42.9061
+
+  --- Medium Scramble ---
+    FFT ratio:       raw 21.0289 → env 36.4163
+    Autocorr ratio:  raw 57.6587 → env 59.7550
+    PSD ratio:       raw 27.9163 → env 51.6677
+    FFT Env advantage:       Δ = 30.0338
+    Autocorr Env advantage:  Δ = -1049.6350
+    PSD Env advantage:       Δ = 43.2114
+
+  --- Strong Scramble ---
+    FFT ratio:       raw 21.0289 → env 36.4163
+    Autocorr ratio:  raw 57.6587 → env 59.7550
+    PSD ratio:       raw 27.9163 → env 51.6677
+    FFT Env advantage:       Δ = 30.0338
+    Autocorr Env advantage:  Δ = -1049.6350
+    PSD Env advantage:       Δ = 43.2114
+
+LEAKAGE PER SNR:
+
+  --- Clean  Scramble ---
+    FFT ratio:       raw 65.5754 → env 104.9585
+    Autocorr ratio:  raw 124.4321 → env 38.6938
+    PSD ratio:       raw 94.9915 → env 152.0865
+    FFT Env advantage:       Δ = 93.3915
+    Autocorr Env advantage:  Δ = -4204.7556
+    PSD Env advantage:       Δ = 129.0851
+
+  --- Small Noise Scramble ---
+    FFT ratio:       raw 11.6789 → env 29.0597
+    Autocorr ratio:  raw 89.6477 → env 75.4846
+    PSD ratio:       raw 13.8907 → env 48.2311
+    FFT Env advantage:       Δ = 22.5205
+    Autocorr Env advantage:  Δ = -15.0589
+    PSD Env advantage:       Δ = 40.5631
+
+  --- Medium Noise Scramble ---
+    FFT ratio:       raw 3.1430 → env 5.9951
+    Autocorr ratio:  raw 9.1464 → env 63.1983
+    PSD ratio:       raw 1.4567 → env 3.1022
+    FFT Env advantage:       Δ = 2.3793
+    Autocorr Env advantage:  Δ = 54.3711
+    PSD Env advantage:       Δ = 1.5891
+
+  --- Large Noise Scramble ---
+    FFT ratio:       raw 3.7184 → env 4.7259
+    Autocorr ratio:  raw 7.4088 → env 62.1391
+    PSD ratio:       raw 1.3264 → env 2.4405
+    FFT Env advantage:       Δ = 1.0342
+    Autocorr Env advantage:  Δ = 53.2587
+    PSD Env advantage:       Δ = 1.2014
+```
+
+- Additionally, from a visual comparison, the pulsar peaks became very prominent even in high noise and high scrambling situations:
+  
+![All Signal Levels](outputs/signals.jpg)
+
+---
+
+### Signal Scrambling and Descrambling
+
+#### Method
+
+1. **Seeded RNGs:**
+   - A seeded Mersenne Twister PRNG was used.
+   - Mersenne Twisters generate a state array based on an input seed, then the state array determines the number being outputted. Each successive integer comes from the previous number, and they all originate from the original state array built from the input seed. Therefore, when calling a Twister PRNG again with the same seed, each successive number from the PRNG stream will be equal.
+   - In MATLAB/Octave when rng(seed) is called, the global stream is set, and the resulting random numbers are determined based on the call number.
+   - Recalling rng(seed) can reset the global stream and generate repeated numbers, if the random functions are called in the same order.
+   
+2. **Chunking the Signal:**
+   - The signal was separated into individual chunks for scrambling.
+     
+3. **Scrambling Level 1: Flipping**
+   - The chunk had a chance of being randomly flipped
+   
+4. **Scrambling Level 2: Amplitude Shifting**
+   - The chunk was scaled with a random value.
+   
+5. **Scrambling Level 3: Time Jitter**
+   - The chunk was circshifted by a random time.
+     
+6. **Descrambling:**
+   - The reverse operations were looped through each chunk in the following order:
+     	- 1. Reverse Time Jitter
+     	- 2. Reverse Amplitude shifting
+     	- 3. Reverse Bit Flipping
+   - The correlation coefficient of the descrambled vs raw signal was equal to 1, verifying descrambling worked.
+
+#### Results
+
+- Scrambling Levels Compared with Raw and Enveloped Signals:
+![Signal Comparisons](outputs/signal_compare2.jpg)
+
+- The scrambling was revealed to be relatively weak, especially in this application. Pulsars are very periodic, which is easy to expose visually and with spectral analysis. In the time domain, especially high-noise environments, though, scrambling was effective in hiding the original signal structure. Scrambling did reduce the effectiveness of spectral analysis.
 
 ---
 
@@ -120,10 +226,10 @@
 
 #### Results
 
-Multiple batches of small sets of seeds (2^12 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced, while sets greater than 2^15 present too many seed collisions.
+Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced with the correct seed being the first or second choice while sets started to gain less reliable results at 2^16.
 
 An interesting note is that before implementing noise thresholding, Top‑1 & Top‑5 accuracy hovered around 50–75%, especially failing under high noise. After thresholding, Top‑5 accuracy reached 100%, showing that **thresholding corrected mis‑weighted spectral scores inflated by noise.**
-
+8192
 Additionally, the speed of the brute force mechanism is slow. Some potential improvements would be improving speed by using MATLAB instead of Octave, as a lot of the brute force tasks could be parallelized, and MATLAB's parallelization performance is better. Using `parfor` for the brute force loops would greatly reduce runtime. 
 
 ##### Test 1 Results: 2048 Possible Seeds on the Same Signal of Varying Noise
@@ -179,34 +285,47 @@ Seed Recovery Success Rate per Noise Level:
 ##### Test 3 Results: 8,192 Possible Seeds on the Same Signal of Varying Noise
 
 ```bash
+Attack Summary:
+Total Sets Brute Forced        : 15
+Range of Seeds Guessed         : 1-8192
+Successful Recoveries          : 15 (100.00%)
+Average Brute-Force Time       : 513.3424 sec
 
+Accuracy/Error Metrics:
+Top 1 Accuracy                 : 100.00%
+Top 5 Accuracy                 : 100.00%
+
+Seed Recovery Success Rate per Scramble Level:
+ Weak   : 100.00%
+ Medium : 100.00%
+ Strong : 100.00%
+Seed Recovery Success Rate per Noise Level:
+ Clean  : 100.00%
+ Low Noise : 100.00%
+ Small Noise : 100.00%
+ Medium Noise : 100.00%
+ High Noise : 100.00%
 ```
 
-##### Test 4 Results: 16,384 Possible Seeds on the Same Signal of Varying Noise
+##### Test 4 Results: 32,768 Possible Seeds on the Same Signal of Varying Noise
 
 ```bash
 
 ```
 
-##### Test 5 Results: 32,768 Possible Seeds on the Same Signal of Varying Noise
+##### Test 5 Results: 65,536 Possible Seeds on the Same Signal of Varying Noise
 
 ```bash
 
 ```
 
-##### Test 6 Results: 65,536 Possible Seeds on the Same Signal of Varying Noise
+##### Test 6 Results: 4096 Possible Seeds on the Varying Pulsar Signals with Low Noise
 
 ```bash
 
 ```
 
-##### Test 7 Results: 4096 Possible Seeds on the Varying Pulsar Signals with Low Noise
-
-```bash
-
-```
-
-##### Test 8 Results: 4096 Possible Seeds on the Varying Pulsar Signals with Medium Noise
+##### Test 7 Results: 4096 Possible Seeds on the Varying Pulsar Signals with Medium Noise
 
 ```bash
 
@@ -235,3 +354,4 @@ In modern cryptography, this same principle is mirrored: **Sufficiently large ke
 ## References
 
 - Bhunia, Swarup, Mark Tehranipoor. *Hardware Security: A Hands On Learning Approach.* Elsevier Incorporated, 2019.
+- Wikipedia & Mathworks Documentation.
