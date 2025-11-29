@@ -408,7 +408,7 @@ ENVELOPE ADVANTAGE PER SIGNAL TYPE:
 
 #### Results
 
-Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes, until the seed set became too large. Even when collisions occurred (different seed, similar decoded output), **the true seed always appeared in the Top‑5 candidates** in small sets. Sets at or below 2^15 can successfully be brute forced with the correct seed being the first or second choice while sets started to gain less reliable results due to collisions at 2^16 seeds.
+Multiple batches of small sets of seeds (2^11 to 2^16 possible seeds) were tested. The scoring function showed a **consistent bias toward the correct seed** across noise and scrambling changes.
 
 An interesting note is that before implementing noise thresholding, Top‑1 & Top‑5 accuracy hovered around 50–75%, especially failing under high noise. After thresholding, Top‑5 accuracy reached 100%, showing that **thresholding corrected mis‑weighted spectral scores inflated by noise.**
 
@@ -526,26 +526,7 @@ Seed Recovery Success Rate per Noise Level:
 <summary>Show Test 5 Results: 65,536 Possible Seeds on the Same Signal of Varying Noise</summary>
 
 ```bash
-Attack Summary:
-Total Sets Brute Forced        : 15
-Range of Seeds Guessed         : 1-65536
-Successful Recoveries          : 0 (0.00%)
-Average Brute-Force Time       : 4053.6489 sec
 
-Accuracy/Error Metrics:
-Top 1 Accuracy                 : 0.00%
-Top 5 Accuracy                 : 0.00%
-
-Seed Recovery Success Rate per Scramble Level:
- Weak   : 0.00%
- Medium : 0.00%
- Strong : 0.00%
-Seed Recovery Success Rate per Noise Level:
- Clean  : 0.00%
- Low Noise : 0.00%
- Small Noise : 0.00%
- Medium Noise : 0.00%
- High Noise : 0.00%
 ```
 </details>
 
@@ -635,7 +616,7 @@ This is where good circuit design comes into play as a defense against SCAs. By 
 
 When the seed space is small, an attacker could often recover the correct seed as the most likely (Top-1) candidate, regardless of the noise and scrambling levels. In some cases, a different seed generated a very similar descrambled output, which lowered Top-1 Accuracy. However, the system still achieved 100% Top‑5 accuracy, meaning the true seed consistently appeared among the five closest matches. With only 5 possible seeds, an attacker could do further analysis using other datasets to conclusively identify the seed.
 
-For a single threaded process, brute-forcing 2^16 seeds took ~40 minutes. Not bad for a confused undergraduate. **Scaling to 2^128 seeds, however, would take ~0.4 nonillion years.** That's kind of a long time. Even if this system was parallelized, that would still be a *computationally infeasible* scale. At that magnitude, the amount of false-positive seed collisions also increases, raising the possibility that the Top-5 candidates may not include the correct seed. 
+For a single threaded process, brute-forcing 2^16 seeds took ~40 minutes. Not bad for a confused undergraduate. **Scaling to 2^128 seeds, however, would take ~0.4 nonillion years.** That's kind of a long time. Even if this system was parallelized, that would still be a *computationally infeasible* scale. 
 
 In modern cryptography, this same principle is mirrored: *Sufficiently large key sizes make it computationally infeasible to determine the encryption key through brute‑force, even when the attacker has access to the encrypted data.* Once the number of possible keys becomes extremely large, key recovery by exhaustive search is no longer a practical attack vector.
 
