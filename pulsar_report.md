@@ -78,6 +78,20 @@ LEAKAGE PER SNR:
 
   --- Large Noise Scramble ---
     Autocorr ratio:  raw 7.4088 → scr 62.1391
+
+LEAKAGE PER SIGNAL TYPE:
+
+  --- 1 Pulse Scrambled ---
+    Autocorr ratio:  raw 154.7263 → scr 200.9439
+
+  --- 0.5 Pulse Scrambled ---
+    Autocorr ratio:  raw 82.7742 → scr 79.6430
+
+  --- Closer Pulses Scrambled ---
+    Autocorr ratio:  raw 79.4739 → scr 275.2745
+
+  --- Sparser Pulses Scrambled ---
+    Autocorr ratio:  raw 106.2562 → scr 97.1022
 ```
 
 ---
@@ -122,6 +136,24 @@ LEAKAGE PER SNR:
   --- Large Noise Scramble ---
     FFT ratio:       raw 3.7184 → scr 4.7259
     PSD ratio:       raw 1.3264 → scr 2.4405
+
+LEAKAGE PER SIGNAL TYPE:
+
+  --- 1 Pulse Scrambled ---
+    FFT ratio:       raw 21.8187 → scr 7.7326
+    PSD ratio:       raw 12.7011 → scr 10.0374
+
+  --- 0.5 Pulse Scrambled ---
+    FFT ratio:       raw 12.4458 → scr 4.8115
+    PSD ratio:       raw 4.3181 → scr 3.6587
+
+  --- Closer Pulses Scrambled ---
+    FFT ratio:       raw 39.9514 → scr 8.1480
+    PSD ratio:       raw 20.2944 → scr 14.8910
+
+  --- Sparser Pulses Scrambled ---
+    FFT ratio:       raw 12.3007 → scr 5.8656
+    PSD ratio:       raw 5.2453 → scr 4.3928
 ```
 
 ---
@@ -206,6 +238,40 @@ LEAKAGE PER SNR:
     FFT Env advantage:       Δ = 1.0342
     Autocorr Env advantage:  Δ = 53.2587
     PSD Env advantage:       Δ = 1.2014
+
+ENVELOPE ADVANTAGE PER SIGNAL TYPE:
+
+  --- 1 Pulse Scramble ---
+    FFT ratio:       raw 21.8187 → scr 54.6307
+    Autocorr ratio:  raw 154.7263 → scr 60.4480
+    PSD ratio:       raw 12.7011 → scr 62.7734
+    FFT Env advantage:       Δ = 46.8981
+    Autocorr Env advantage:  Δ = -140.4959
+    PSD Env advantage:       Δ = 52.7360
+
+  --- 0.5 Pulse Scramble ---
+    FFT ratio:       raw 12.4458 → scr 24.8449
+    Autocorr ratio:  raw 82.7742 → scr 101.9501
+    PSD ratio:       raw 4.3181 → scr 15.6295
+    FFT Env advantage:       Δ = 20.0334
+    Autocorr Env advantage:  Δ = 22.3071
+    PSD Env advantage:       Δ = 11.9708
+
+  --- Closer Pulses Scramble ---
+    FFT ratio:       raw 39.9514 → scr 95.4196
+    Autocorr ratio:  raw 79.4739 → scr 35.3196
+    PSD ratio:       raw 20.2944 → scr 82.4980
+    FFT Env advantage:       Δ = 87.2716
+    Autocorr Env advantage:  Δ = -239.9549
+    PSD Env advantage:       Δ = 67.6070
+
+  --- Sparser Pulses Scramble ---
+    FFT ratio:       raw 12.3007 → scr 30.6706
+    Autocorr ratio:  raw 106.2562 → scr 116.0302
+    PSD ratio:       raw 5.2453 → scr 23.7434
+    FFT Env advantage:       Δ = 24.8050
+    Autocorr Env advantage:  Δ = 18.9280
+    PSD Env advantage:       Δ = 19.3506
 ```
 
 - Additionally, direct waveform inspection showed that the enveloped obfuscated signal still had distinguishable pulsar peaks across all tested SNR and scrambling conditions:
@@ -286,14 +352,16 @@ LEAKAGE PER SNR:
     
 5. **Spectral Ratio Scoring:** 
     - Computed the `FFT Ratio` and `PSD Ratio`.
-    - FFT Ratio was scaled loarithmically to normalize it.
+    - Ratios were scaled loarithmically to normalize then.
     - Descrambled signals with the highest FFT and PSD ratios hinted towards the best reconstruction of the original signal.
       
 6. **Noise Thresholding:** 
     - Applied fast pre-filters:
-	    - The FFT, PSD, Envelope median were multiplied by a constant for scaling across noises
+	    - Envelope median was scaled with its height for a minimum envelope scaled with noise.
+      	- PSD and FFT ratios were thresholded to 1.2.
 		- If the envelope, FFT, or PSD values were outside observed sane ranges, seed was skipped or rejected.
 	- This reduced false positives by ensuring sure a seed scored well across all tests, and slightly improved runtime.
+ 	- Hardcoded values were originally used based on scoring trend observation. But, more flexible thresholds had to be allowed once expanded to larger signal inputs.
 
 #### Results
 
