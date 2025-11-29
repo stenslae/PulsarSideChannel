@@ -215,10 +215,10 @@ function attack_results(results, noisy_sets, t)
     fprintf("%-30s : %.4f sec\n\n", "Average Brute-Force Time", seed_time);
 
     fprintf("Accuracy/Error Metrics:\n");
-    fprintf("%-35s : %.2f%%\n", "Top 1 Accuracy", top1_acc);
-    fprintf("%-35s : %.2f%%\n", "Top 5 Accuracy", top5_acc);
-    fprintf("%-35s : %.3f\n", "Mean Absolute Error (MAE)", MAE);
-    fprintf("%-35s : %.3f\n\n", "Root Mean Square Error (RMSE)", RMSE);
+    fprintf("%-30s : %.2f%%\n", "Top 1 Accuracy", top1_acc);
+    fprintf("%-30s : %.2f%%\n", "Top 5 Accuracy", top5_acc);
+    fprintf("%-30s : %.3f\n", "Mean Absolute Error (MAE)", MAE);
+    fprintf("%-30s : %.3f\n\n", "Root Mean Square Error (RMSE)", RMSE);
 
     % ==== Per Scramble Level ====
     fprintf("Seed Recovery Success Rate per Scramble Level:\n");
@@ -314,7 +314,7 @@ function attack_results(results, noisy_sets, t)
     % ==== Seed Plots ====
 
     % Bar: Top-1 vs Top-5 Accuracy per Scramble Level
-    figure;
+    figure('Name','Top 1 vs Top 5 Accuracy');
     bar([mean(seed_success(:,1)), mean(seed_success(:,2)), mean(seed_success(:,3));
          mean(top5_hits(:,1)), mean(top5_hits(:,2)), mean(top5_hits(:,3))]');
     legend({'Top-1','Top-5'});
@@ -322,20 +322,20 @@ function attack_results(results, noisy_sets, t)
     ylabel('Accuracy'); title('Seed Recovery Accuracy per Scramble Level');
 
     % Bar: Accuracy per Noise/SNR Level
-    figure;
+    figure('Name','Accuracy per SNR');
     bar(mean(seed_success,2));
     xticklabels(SNRs);
     ylabel('Accuracy'); title('Seed Recovery Accuracy vs Noise Level'); xlabel('SNR Level');
 
     % Heatmap of success grid
-    figure;
+    figure('Name','Success');
     imagesc(seed_success); colorbar;
     xticks(1:3); xticklabels({'Weak','Medium','Strong'});
     yticks(1:num_snr); yticklabels(SNRs);
     xlabel('Scramble Level'); ylabel('SNR Level'); title('Top-1 Seed Recovery Heatmap');
 
     % Scatter: seed error
-    figure;
+    figure('Name','Scatter Seed');
     scatter(1:total_sets, seed_err(:));
     xlabel('Set index'); ylabel('Seed Error'); title('Seed Error across All Sets'); grid on;
 

@@ -10,8 +10,8 @@ function results = main_emma(noisy_sets, fs, t)
     %  Three scramble strengths for all SNR: weak, medium, strong
     scr_level = {'Weak','Medium','Strong'};
 
-    % Generate random seed from 1 to 2^14
-    max_seed = 16384;
+    % Generate random seed from 1 to 2^16
+    max_seed = 4096;
     seed = randi(max_seed);
 
     iteration = 0;
@@ -54,6 +54,7 @@ function results = main_emma(noisy_sets, fs, t)
 
             % ==== EXPOSING SEED USED TO OBFUSCATE SIGNAL ====
             tic
+            all_score = -Inf(1, max_seed);
             for test_seed = 1:max_seed
                    for si = 1:length(scr_level)
                         test_level = scr_level{si};
@@ -66,29 +67,27 @@ function results = main_emma(noisy_sets, fs, t)
                         % Envelope y to prevent false positives
                         y_env = abs(hilbert(y));
                         env_score = corr(y_env(:), env(:));
-                        env_threshold = median(y_env)*0.5 + 0.5;
+                        env_threshold = 0.5 * median(env) / max(1e-6, mean(env));
 
                         % Skip if bad env
                         if env_score < env_threshold
                             continue
                         end
 
-                        % FFT score
+                        % FFT Score
                         Y = abs(fft(y));
                         N = length(Y);
                         Y = Y(1:floor(N/2));
                         fft_noise = median(Y);
-                        fft_threshold = fft_noise*1.5 + 0.5;
                         fft_score = 10*log10(max(Y)/fft_noise);
 
-                        % PSD
+                        % PSD Score
                         [Pxx, ff] = pwelch(y, [], [], [], fs);
                         psd_noise = median(Pxx);
-                        psd_threshold = psd_noise*1.5 + 0.5;
-                        psd_score = max(Pxx) / psd_noise;
+                        psd_score = 10*log10(max(Pxx) / psd_noise);
 
                         % Skip if bad fft/psd score
-                        if fft_score < fft_threshold || psd_score < psd_threshold
+                        if fft_score < 10*log10(1.2) || psd_score < 10*log10(1.2)
                             continue
                         end
 
@@ -105,7 +104,7 @@ function results = main_emma(noisy_sets, fs, t)
               best_seed = idx(1);
               second = idx(2);
               top5 = idx(1:5);
-              m = best_seed - second;
+              m = sorted(1) - sorted(2);
 
             % Store Results
             results(iteration).seed_max = max_seed;
