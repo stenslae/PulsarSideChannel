@@ -21,7 +21,8 @@
 
 ### Project Goals
 
-- **Pulsar signals** are periodic electromagnetic (EM) pulses from rotating neutron stars. Naturally, I decided to attack simulated ones using EM side‑channel analysis and a brute‑force seed recovery approach. Because pulsars are basically beacon signals with absurd periodicity, brute‑forcing them is easier than explaining what neutron stars are. In this work, the side-channel is the pulsar emission itself, and the ‘target device’ is the scrambling algorithm applied to it.
+- **Pulsar signals** are periodic electromagnetic (EM) pulses from rotating neutron stars. Naturally, I decided to attack simulated ones using EM side‑channel analysis and a brute‑force seed recovery approach. Because pulsars are basically beacon signals with absurd periodicity, brute‑forcing them is easier than explaining what neutron stars are.
+- **In this project, the side-channel is the simpulated pulsar emissions, and the ‘target device’ is the scrambling algorithm applied to it.**
 - The primary [objectives](#takeaways) of this project are as follows:
 	1. What techniques can detect data leakage in signals?
 	2. How does scrambling level and SNR affect pulsar signal leakage?
@@ -634,7 +635,7 @@ This is where good circuit design comes into play as a defense against SCAs. By 
 
 When the seed space is small, an attacker could often recover the correct seed as the most likely (Top-1) candidate, regardless of the noise and scrambling levels. In some cases, a different seed generated a very similar descrambled output, which lowered Top-1 Accuracy. However, the system still achieved 100% Top‑5 accuracy, meaning the true seed consistently appeared among the five closest matches. With only 5 possible seeds, an attacker could do further analysis using other datasets to conclusively identify the seed.
 
-For a single threaded process, brute-forcing 2^16 seeds took ~40 minutes. **But, a more significant number, such as 2^128 seeds, would take about 0.4 nonillion years to brute force!** That's sort of a long time. Even if this system was parallelized, that would still be a *computationally infeasible* scale. At that magnitude, the amount of false-positive seed collisions also increases, raising the possibility that the Top-5 candidates may not include the correct seed. 
+For a single threaded process, brute-forcing 2^16 seeds took ~40 minutes. Not bad for a confused undergraduate. **Scaling to 2^128 seeds, however, would take ~0.4 nonillion years.** That's kind of a long time. Even if this system was parallelized, that would still be a *computationally infeasible* scale. At that magnitude, the amount of false-positive seed collisions also increases, raising the possibility that the Top-5 candidates may not include the correct seed. 
 
 In modern cryptography, this same principle is mirrored: *Sufficiently large key sizes make it computationally infeasible to determine the encryption key through brute‑force, even when the attacker has access to the encrypted data.* Once the number of possible keys becomes extremely large, key recovery by exhaustive search is no longer a practical attack vector.
 
