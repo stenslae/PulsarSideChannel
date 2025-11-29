@@ -60,6 +60,7 @@
 
 - The leakage metrics derived from autocorrelation were poor. The autocorrelation peak occurred near zero lag, indicating that the pulsars were not detected. Instead, regions dominated by zeros or noise produced the strongest correlation.
 - The extremely high autocorrelation at zero lag artificially inflated the autocorrelation ratio, causing misleadingly high leakage scores.
+- For future improvement, being stricter at removing peaks around zero could result in helpful autocorrelation metrics.
 
 ```bash
 LEAKAGE PER SCRAMBLING:
@@ -119,7 +120,17 @@ LEAKAGE PER SIGNAL TYPE:
 
 #### Method
 
+- Spectral fingerprinting is when instead of analyzing signals in the time domain, signals are analyzed in the frequency domain.
+- The **Fourier Transform** displays peaks of a signal where the signal has frequencies present. The maximum peak within the positive frequencies was divided by the median magnitude results in the FFT Ratio. The FFT Ratio would reveal the level of periodicity at the most common frequency in the signal.
+- **Power Spectral Density** describes how the average power of a signal is distributed across frequencies. The maximum peak divided by the median results in the PSD Ratio. The PSD Ratio would reveal at what frequency the signal is most "active" in terms of power, which would point to periodic behavior.
+
 #### Results
+
+- Spectral fingerprinting successfully revealed leakage from pulsar periodicity. Both FFT ratio and PSD ratio increased significantly after scrambling, confirming that periodic structure remained detectable in the frequency domain. As the scrambling was altered within the time domain using linear transformations, scrambling has little effect on the FFT and PSD ratios.
+
+- Noise significantly reduced peak contrast for spectral fingerprinting, which reduced leakage metrics.
+
+- Unlike autocorrelation, these spectral ratios remained stable for pulsars because the median reflects the spectral noise floor, instead of the zero-valued gaps between pulses.
 
 ![Leakage Heatmap](outputs/leakage_heatmap.jpg)
 
@@ -543,7 +554,7 @@ Seed Recovery Success Rate per Noise Level:
 
 ### How does scrambling level and the SNR affect pulsar data leakage?
 
-
+The scrambling level had minimal effect on the pulsar data leakage.
 
 ### Can an attacker determine the seed used to obfuscate the signal?
 
